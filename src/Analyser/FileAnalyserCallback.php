@@ -115,6 +115,9 @@ final class FileAnalyserCallback
 		$uniquedAnalysedCodeExceptionMessages = [];
 		$nodeType = get_class($node);
 		foreach ($this->ruleRegistry->getRules($nodeType) as $rule) {
+			// We need to identify unique rules to assign an issue code
+			$ruleName = get_class($rule);
+
 			try {
 				$ruleErrors = $rule->processNode($node, $scope);
 			} catch (AnalysedCodeException $e) {
@@ -149,7 +152,7 @@ final class FileAnalyserCallback
 			}
 
 			foreach ($ruleErrors as $ruleError) {
-				$error = $this->ruleErrorTransformer->transform($ruleError, $scope, $parserNodes, $node);
+				$error = $this->ruleErrorTransformer->transform($ruleName, $ruleError, $scope, $parserNodes, $node);
 
 				if ($error->canBeIgnored()) {
 					foreach ($this->ignoreErrorExtensions as $ignoreErrorExtension) {

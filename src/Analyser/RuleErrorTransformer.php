@@ -49,6 +49,7 @@ final class RuleErrorTransformer
 	 * @param Node\Stmt[] $fileNodes
 	 */
 	public function transform(
+		string $ruleName,
 		RuleError $ruleError,
 		Scope $scope,
 		array $fileNodes,
@@ -150,8 +151,10 @@ final class RuleErrorTransformer
 			}
 		}
 
+		$message = sprintf('%s:::%s', $ruleName, $ruleError->getMessage());
+
 		return new Error(
-			$ruleError->getMessage(),
+			$message,
 			$fileName,
 			$line,
 			$canBeIgnored,
