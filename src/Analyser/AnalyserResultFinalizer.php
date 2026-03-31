@@ -51,6 +51,8 @@ final class AnalyserResultFinalizer
 		$tempCollectorErrors = [];
 		$internalErrors = $analyserResult->getInternalErrors();
 		foreach ($this->ruleRegistry->getRules($nodeType) as $rule) {
+			$ruleName = get_class($rule);
+
 			try {
 				$ruleErrors = $rule->processNode($node, $scope);
 			} catch (AnalysedCodeException $e) {
@@ -93,7 +95,7 @@ final class AnalyserResultFinalizer
 			}
 
 			foreach ($ruleErrors as $ruleError) {
-				$error = $this->ruleErrorTransformer->transform($ruleError, $scope, [], $node);
+				$error = $this->ruleErrorTransformer->transform($ruleName, $ruleError, $scope, [], $node);
 
 				if ($error->canBeIgnored()) {
 					foreach ($this->ignoreErrorExtensionProvider->getExtensions() as $ignoreErrorExtension) {
